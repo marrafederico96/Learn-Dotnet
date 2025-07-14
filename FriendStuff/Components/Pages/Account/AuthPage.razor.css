@@ -1,0 +1,82 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.form-container h2 {
+    margin-bottom: 10px;
+}
+
+::deep form {
+    display: flex;
+    flex-direction: column;
+    width: 340px;
+    border: 1px solid var(--txt-color);
+    padding: 10px;
+}
+
+::deep form>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.form-container label,
+.form-container ::deep input,
+.form-container button {
+    width: 100%;
+}
+
+.form-container button {
+    font-size: 1.1rem;
+}
+
+.form-container label {
+    margin-bottom: 10px;
+}
+
+.form-container ::deep input:focus {
+    outline: 1px solid var(--accent-color);
+}
+
+.form-container ::deep input {
+    padding: 6px;
+    background-color: rgb(250, 226, 217);
+    border: 1px solid var(--txt-color);
+}
+
+.form-container p {
+    padding: 5px 0;
+    font-size: 0.9rem;
+}
+
+.form-container ::deep a {
+    padding: 2px;
+    border: none;
+    text-decoration: underline;
+}
+
+::deep .error {
+    color: #ff0000;
+    width: 100%;
+    font-size: 0.9rem;
+    font-weight: bold;
+    background-color: #4e0d0d;
+    margin: 5px 0 10px 0;
+    text-align: center;
+}
+
+.form-container button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.form-container button:disabled:hover {
+    background-color: transparent;
+}

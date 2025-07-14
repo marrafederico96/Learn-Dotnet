@@ -1,0 +1,31 @@
+﻿@using FriendStuff.Components.Shared
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
+@rendermode InteractiveServer
+
+<nav>
+    <CascadingAuthenticationState>
+        @if (CurrentUser != null)
+        {
+            <button type="button" @onclick:preventDefault @onclick="SidebarState">@CurrentUser</button>
+            <Sidebar IsOpen="@isSidebarOpen" CurrentUser="@CurrentUser" />
+        }
+        else
+        {
+            <NavLink href="/Account/Register">Register</NavLink>
+            <NavLink href="/Account/Login">Login</NavLink>
+        }
+    </CascadingAuthenticationState>
+</nav>
+
+@code {
+    private bool isSidebarOpen;
+    [Parameter]
+    public string CurrentUser { get; set; } = null!;
+
+    public void SidebarState()
+    {
+        this.isSidebarOpen = !this.isSidebarOpen;
+    }
+
+}

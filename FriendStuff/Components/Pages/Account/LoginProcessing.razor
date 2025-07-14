@@ -1,0 +1,26 @@
+﻿@page "/Account/Login/Processing"
+
+@using FriendStuff.Services
+@using FriendStuff.Dto;
+
+@inject ILoginProcessingService LoginProcessingService;
+@inject IUserService UserService;
+@inject NavigationManager Navigation;
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+
+        try
+        {
+            await UserService.LoginUser(LoginProcessingService.UserData);
+            Navigation.NavigateTo("/", forceLoad: true);
+
+        }
+        catch (ArgumentException e)
+        {
+            Navigation.NavigateTo($"/Account/Login?error={Uri.EscapeDataString(e.Message)}");
+        }
+
+    }
+}

@@ -1,0 +1,37 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-color: #181818;
+    --txt-color: #f7f7f7;
+    --accent-color: #ff5722;
+    --accent-color-2: #673ab7;
+    --hover-color: #ffeb3b;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--txt-color);
+}
+
+a {
+    text-decoration: none;
+}
+
+a,
+button {
+    padding: 8px 16px;
+    color: var(--txt-color);
+    background-color: transparent;
+    border: 1px solid var(--txt-color);
+    transition: background-color 0.2s ease-in-out;
+}
+
+a:hover,
+button:hover {
+    cursor: pointer;
+    background-color: var(--accent-color);
+}

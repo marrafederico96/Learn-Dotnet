@@ -1,0 +1,14 @@
+﻿@page "/Account/Logout"
+@using FriendStuff.Services
+@inject IUserService UserService;
+@inject NavigationManager Navigation;
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UserService.Logout();
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+
+}

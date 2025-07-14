@@ -1,0 +1,24 @@
+﻿@using FriendStuff.Components.Shared
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
+
+<header>
+    <h1>Friend Stuff</h1>
+    <NavMenu CurrentUser="@currentUser" />
+</header>
+
+<main>
+    @Body
+</main>
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; } = null!;
+    private string? currentUser;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationState;
+        currentUser = authState.User.Identity?.Name;
+    }
+}
