@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FriendStuff.Models;
 
@@ -23,5 +21,9 @@ public class User
 
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
+
+    public ICollection<Group>? GroupsAdmin { get; } = [];
+
+    public ICollection<GroupMember> MemberGroups { get; } = [];
 
 }

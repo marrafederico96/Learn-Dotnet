@@ -1,4 +1,3 @@
-using System;
 using System.Security.Claims;
 using FriendStuff.Dto;
 using FriendStuff.Models;
@@ -79,19 +78,37 @@ public class UserService(IUserRepository userRepository, IPasswordHasher<User> p
 
     public async Task<UserInfoDto> GetUserInfo(string Username)
     {
-        var user = await this._userRepository.FindUserByUsername(Username);
-        if (user == null)
-        {
-            throw new ArgumentException("User not found");
-        }
-
+        var user = await this._userRepository.FindUserByUsername(Username) ?? throw new ArgumentException("User not found");
         UserInfoDto userInfo = new()
         {
             Username = user.Username,
             Email = user.Email,
             FirstName = user.FirstName,
             LastName = user.LastName,
+            Groups = [.. user.MemberGroups.Select(g => new GroupMemberDto
+            {
+                GroupName = g.Group.GroupName,
+                MemberUsername = [.. g.Group.GroupMembers.Select(u => u.User.Username)],
+                NumberMember = g.Group.GroupMembers.Count()
+
+            })]
         };
         return userInfo;
     }
+
+    public async Task<List<GroupMemberDto>> GetGroups(string Username)
+    {
+        var user = await this._userRepository.FindUserByUsername(Username) ?? throw new ArgumentException("User not found");
+
+        var groupMemberDto = user.MemberGroups.Select(g => new GroupMemberDto
+        {
+            GroupName = g.Group.GroupName,
+            NumberMember = g.Group.GroupMembers.Count,
+            MemberUsername = [.. g.Group.GroupMembers.Select(u => u.User.Username)]
+        }).ToList();
+
+        return groupMemberDto;
+    }
 }
+
+

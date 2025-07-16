@@ -8,8 +8,11 @@
     --bg-color: #181818;
     --txt-color: #f7f7f7;
     --accent-color: #ff5722;
-    --accent-color-2: #673ab7;
     --hover-color: #ffeb3b;
+}
+
+html {
+    font-family: "Roboto", sans-serif;
 }
 
 body {
@@ -23,6 +26,7 @@ a {
 
 a,
 button {
+    font-family: "Roboto", sans-serif;
     padding: 8px 16px;
     color: var(--txt-color);
     background-color: transparent;
@@ -34,4 +38,25 @@ a:hover,
 button:hover {
     cursor: pointer;
     background-color: var(--accent-color);
+}
+
+a:active,
+button:active {
+    transform: scale(0.95);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: auto;
+    padding: 50px;
+    text-wrap: balance;
+}
+
+@media screen and (max-width:600px) {
+    .container {
+        width: 100%;
+        justify-content: center;
+    }
 }

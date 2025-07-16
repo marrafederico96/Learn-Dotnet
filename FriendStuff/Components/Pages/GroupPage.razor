@@ -1,0 +1,45 @@
+﻿@page "/Account/Group/{Group}"
+
+@using FriendStuff.Components.Shared
+@using FriendStuff.Dto
+@using FriendStuff.Services
+@using Microsoft.AspNetCore.Authorization;
+
+@attribute [Authorize]
+
+<h2>Group Page</h2>
+
+@if (groupMemberDto != null)
+{
+    <div>
+        <p>@groupMemberDto.GroupName</p>
+        <p>@groupMemberDto.MemberUsername</p>
+        <p>@groupMemberDto.NumberMember</p>
+    </div>
+}
+else
+{
+    <div>Loading...</div>
+}
+
+
+@code {
+    [Parameter]
+    public string? Group { get; set; }
+
+    [CascadingParameter(Name = "UserInfo")]
+    public UserInfoDto? UserInfo { get; set; }
+
+    private GroupMemberDto? groupMemberDto;
+    protected override void OnInitialized()
+    {
+
+        if (UserInfo != null)
+        {
+            groupMemberDto = UserInfo.Groups.Where(g => g.GroupName.Equals(Group)).FirstOrDefault();
+        }
+
+    }
+
+
+}

@@ -1,0 +1,25 @@
+﻿@page "/"
+
+@using FriendStuff.Components.Shared
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization;
+@using System.Security.Claims;
+@using FriendStuff.Models;
+@using FriendStuff.Dto;
+@using FriendStuff.Services;
+
+@inject IUserService UserService
+@inject IGroupService GroupService
+
+@attribute [Authorize]
+
+<GroupComponent UserInfo="UserInfo" Groups="Groups" />
+<EventComponent />
+@code {
+    [CascadingParameter(Name = "UserInfo")]
+    public UserInfoDto? UserInfo { get; set; }
+
+    [CascadingParameter(Name = "Groups")]
+    public List<GroupMemberDto>? Groups { get; set; }
+
+}

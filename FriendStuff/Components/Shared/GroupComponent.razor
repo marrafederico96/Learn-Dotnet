@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization;
+@using System.Security.Claims;
+@using FriendStuff.Models;
+@using FriendStuff.Dto;
+@using FriendStuff.Services;
+
+@rendermode InteractiveServer
+@inject IUserService UserService
+@inject IGroupService GroupService
+
+@attribute [Authorize]
+
+<section>
+    <div>
+        <h2>Manage Your Groups and Events</h2>
+    </div>
+    @if (Groups != null)
+    {
+        <h3 style="margin: 20px 0;">My Groups</h3>
+        <div class="group-container">
+            @foreach (var group in Groups)
+            {
+                string urlGroupName = group.GroupName.Replace(" ", "-");
+                string urlGroup = "/Account/Group/" + urlGroupName;
+                <NavLink href="@urlGroup" class="group">
+                    <p>@group.GroupName</p>
+                    <p>@group.NumberMember Members</p>
+                </NavLink>
+            }
+        </div>
+    }
+    else
+    {
+        <div>Nessun gruppo trovato</div>
+    }
+    <EditForm Model="GroupData" OnValidSubmit="CreateGroup" FormName="GroupForm">
+        <DataAnnotationsValidator />
+        <InputText placeholder="Group Name" required @bind-Value="GroupData.GroupName" />
+        @if (!string.IsNullOrEmpty(error))
+        {
+            <p class="error">@error</p>
+        }
+        <button type="submit">Create</button>
+    </EditForm>
+</section>
+@code {
+    [Parameter]
+    public UserInfoDto? UserInfo { get; set; }
+    [Parameter]
+    public List<GroupMemberDto>? Groups { get; set; }
+    private string? error = null;
+    private GroupDto GroupData { get; set; } = new GroupDto();
+    public async Task CreateGroup()
+    {
+        try
+        {
+            if (UserInfo != null)
+            {
+                if (!string.IsNullOrEmpty(UserInfo.Username))
+                {
+                    await GroupService.CreateGroup(GroupData.GroupName, UserInfo.Username);
+                    GroupData = new GroupDto();
+                    Groups = await UserService.GetGroups(UserInfo.Username);
+                }
+            }
+        }
+        catch (ArgumentException e)
+        {
+            error = e.Message;
+        }
+    }
+}

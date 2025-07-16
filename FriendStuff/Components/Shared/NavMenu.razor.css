@@ -1,0 +1,17 @@
+header nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header nav ::deep a:first-of-type {
+    margin-right: 10px;
+}
+
+@media screen and (max-width: 600px) {
+
+    header nav ::deep a {
+        flex-direction: column;
+        font-size: 0.9rem;
+    }
+}

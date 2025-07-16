@@ -1,41 +1,31 @@
-﻿@using FriendStuff.Services;
-@using FriendStuff.Dto;
+﻿@using FriendStuff.Dto;
 
-@inject IUserService UserService;
 
 <div class="@SidebarCssClass">
-    <div class="info">
-        <h3 style="margin-bottom: 10px;">@firstName @lastName</h3>
-        <div>
-            <p style="margin-right: 10px;">Username:</p>
-            <p>@CurrentUser</p>
+    @if (UserInfo != null)
+    {
+        <div class="info">
+            <h3 style="margin-bottom: 10px;">@UserInfo.FirstName @UserInfo.LastName</h3>
+            <div>
+                <p style="margin-right: 10px;">Username:</p>
+                <p>@UserInfo.Username</p>
+            </div>
+            <div>
+                <p style=" margin-right: 10px;">Email:</p>
+                <p>@UserInfo.Email</p>
+            </div>
         </div>
-        <div>
-            <p style=" margin-right: 10px;">Email:</p>
-            <p>@email</p>
-        </div>
-    </div>
-    <NavLink href="/Account/Logout">Logout</NavLink>
+        <NavLink href="/Account/Logout">Logout</NavLink>
+    }
 </div>
 
 @code {
     [Parameter]
     public bool IsOpen { get; set; }
-    private string? email;
-    private string? firstName;
-    private string? lastName;
+
     [Parameter]
-    public string CurrentUser { get; set; } = null!;
+    public required UserInfoDto UserInfo { get; set; }
 
     private string SidebarCssClass => IsOpen ? "sidebar open" : "sidebar";
-
-    protected override async Task OnInitializedAsync()
-    {
-        var user = await UserService.GetUserInfo(CurrentUser);
-        email = user.Email;
-        firstName = user.FirstName;
-        lastName = user.LastName;
-    }
-
 
 }

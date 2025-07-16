@@ -23,6 +23,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGroupRepositoy, GroupRepository>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddSingleton<ILoginProcessingService, LoginProcessingService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

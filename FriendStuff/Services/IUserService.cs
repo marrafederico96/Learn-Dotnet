@@ -1,5 +1,6 @@
 using System;
 using FriendStuff.Dto;
+using FriendStuff.Models;
 
 namespace FriendStuff.Services
 {
@@ -18,15 +19,15 @@ namespace FriendStuff.Services
         /// <summary>
         /// Logs in a user and returns a JWT token if the credentials are valid.
         /// </summary>
-        /// <param name="userData">An object containing the user's login credentials.</param>
+        /// <param name="UserData">An object containing the user's login credentials.</param>
         /// <returns>Set cookie for authenitcation.</returns>
-        public Task LoginUser(UserLoginDto userData);
+        public Task LoginUser(UserLoginDto UserData);
 
 
         /// <summary>
         /// Logout a user and invalidade Cookie.
         /// </summary>
-        /// <param name="userData">An object containing the user's login credentials.</param>
+        /// <param name="UserData">An object containing the user's login credentials.</param>
         /// <returns>A JWT token as a string, if login is successful.</returns>
         public Task Logout();
 
@@ -39,8 +40,16 @@ namespace FriendStuff.Services
         /// <summary>
         /// Get user logged info
         /// </summary>
-        /// <param name="username">Find user by username</param>
+        /// <param name="Username">Find user by username</param>
         /// <returns>userInfoDto object</returns>
-        public Task<UserInfoDto> GetUserInfo(string username);
+        public Task<UserInfoDto> GetUserInfo(string Username);
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Username"></param>
+        /// <returns></returns>
+        public Task<List<GroupMemberDto>> GetGroups(string Username);
     }
 }

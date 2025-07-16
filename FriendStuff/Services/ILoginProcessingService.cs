@@ -1,4 +1,3 @@
-using System;
 using FriendStuff.Dto;
 
 namespace FriendStuff.Services;

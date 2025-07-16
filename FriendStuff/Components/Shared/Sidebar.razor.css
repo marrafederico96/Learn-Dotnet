@@ -42,3 +42,7 @@
     width: 100%;
     text-align: center;
 }
+
+.sidebar ::deep a {
+    margin-right: 0 !important;
+}

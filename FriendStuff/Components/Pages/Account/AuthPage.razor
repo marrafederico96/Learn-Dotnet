@@ -1,6 +1,8 @@
 ﻿@page "/Account/{Mode}"
+
 @rendermode InteractiveServer
 
+@using FriendStuff.Components.Shared
 @using FriendStuff.Dto;
 @using FriendStuff.Services;
 @inject IUserService UserService;
@@ -8,126 +10,9 @@
 @inject NavigationManager Navigation;
 @inject ILoginProcessingService LoginProcessingService
 
-<div class="form-container">
-    @if (isRegisterPage)
-    {
-        <h2>Register</h2>
-        <EditForm Model="UserDataRegister" OnValidSubmit="Submit">
-            <DataAnnotationsValidator />
-            <div>
-                <label for="FirstName">First Name</label>
-                <InputText id="FirstName" required placeholder="First Name" @bind-Value="UserDataRegister!.FirstName" />
-            </div>
-            <div>
-                <label for="LastName">Last Name</label>
-                <InputText id="LastName" required placeholder="Last Name" @bind-Value="UserDataRegister.LastName" />
-
-            </div>
-            <div>
-                <label for="Username">Username</label>
-                <InputText id="Username" required placeholder="Username" @bind-Value="UserDataRegister.Username" />
-
-            </div>
-            <div>
-                <label for="Email">Email</label>
-                <InputText id="Email" type="email" required placeholder="Email" @bind-Value="UserDataRegister.Email" />
-
-            </div>
-            <div>
-                <label for="Password">Password</label>
-                <InputText id="Password" type="password" required placeholder="Password"
-                    @bind-Value="UserDataRegister.Password" />
-
-            </div>
-            <div>
-                <label for="ConfirmPassword">Confirm Password</label>
-                <InputText id="ConfirmPassword" type="password" required placeholder="Confirm Password"
-                    @bind-Value="UserDataRegister.ConfirmPassword" />
-
-            </div>
-            @if (errorMessage != "")
-            {
-                <p class="error">@errorMessage</p>
-            }
-            <button type="submit" disabled="@(!editContext?.Validate())">Register</button>
-            <p>Alredy register? <NavLink href="/Account/Login">Login</NavLink>
-            </p>
-        </EditForm>
-    }
-    else
-    {
-        <h2>Login</h2>
-        <EditForm Model="UserDataLogin" OnValidSubmit="Submit" FormName="LoginForm">
-            <DataAnnotationsValidator />
-            <div>
-                <label for="Username">Username</label>
-                <InputText id="Username" required placeholder="Username" @bind-Value="UserDataLogin!.Username" />
-            </div>
-            <div>
-                <label for="Password">Password</label>
-                <InputText id="Password" type="password" required placeholder="Password"
-                    @bind-Value="UserDataLogin.Password" />
-
-            </div>
-            @if (errorMessage != "")
-            {
-                <p class="error">@errorMessage</p>
-            }
-            <button type="submit" disabled="@(!editContext?.Validate())">Login</button>
-            <p>New user? <NavLink href="/Account/Register">Register</NavLink>
-            </p>
-        </EditForm>
-    }
-</div>
+<AuthComponent Mode="@Mode" />
 
 @code {
-    private EditContext? editContext;
-    private string errorMessage = string.Empty;
     [Parameter]
     public string? Mode { get; set; }
-    [SupplyParameterFromQuery(Name = "error")]
-    public string? ErrorUrl { get; set; }
-    private bool isRegisterPage => Mode?.Equals("Register", StringComparison.OrdinalIgnoreCase) ?? false;
-    private UserRegisterDto UserDataRegister { get; set; } = new UserRegisterDto();
-    private UserLoginDto UserDataLogin { get; set; } = new UserLoginDto();
-
-    protected override void OnParametersSet()
-    {
-        errorMessage = string.Empty;
-        if (isRegisterPage)
-        {
-            editContext = new EditContext(UserDataRegister);
-        }
-        else
-        {
-            editContext = new EditContext(UserDataLogin);
-        }
-        if (!string.IsNullOrEmpty(ErrorUrl))
-        {
-            errorMessage = ErrorUrl;
-        }
-    }
-
-    public async Task Submit()
-    {
-        if (isRegisterPage)
-        {
-            try
-            {
-                await UserService.RegisterUser(UserDataRegister);
-                Navigation.NavigateTo("/Account/Login", forceLoad: true);
-            }
-            catch (ArgumentException e)
-            {
-                this.errorMessage = e.Message;
-            }
-        }
-        else
-        {
-            LoginProcessingService.UserData = UserDataLogin;
-            Navigation.NavigateTo("/Account/Login/Processing", forceLoad: true);
-        }
-    }
-}
-
 }

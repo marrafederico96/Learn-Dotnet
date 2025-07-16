@@ -1,24 +1,46 @@
-﻿@using FriendStuff.Components.Shared
+﻿@using FriendStuff.Components.Pages
+@using FriendStuff.Components.Shared
+@using FriendStuff.Models
 @using Microsoft.AspNetCore.Components.Authorization
+@using FriendStuff.Services;
+@using FriendStuff.Dto;
+
+
 @inherits LayoutComponentBase
+@inject IUserService UserService;
 
 <header>
     <h1>Friend Stuff</h1>
-    <NavMenu CurrentUser="@currentUser" />
+    <NavMenu CurrentUser="@CurrentUser" UserInfo="@UserInfo" />
 </header>
 
-<main>
-    @Body
+<main class="container">
+    <CascadingValue Name="UserInfo" Value="UserInfo">
+        <CascadingValue Name="Groups" Value="Groups">
+            @Body
+        </CascadingValue>
+    </CascadingValue>
 </main>
+
 @code {
     [CascadingParameter]
-    private Task<AuthenticationState> authenticationState { get; set; } = null!;
-    private string? currentUser;
-
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    private string? CurrentUser;
+    private UserInfoDto? UserInfo;
+    private List<GroupMemberDto>? Groups;
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await authenticationState;
-        currentUser = authState.User.Identity?.Name;
+        if (authenticationState != null)
+        {
+            var authState = await authenticationState;
+            CurrentUser = authState.User.Identity?.Name;
+            if (CurrentUser != null)
+            {
+                UserInfo = await UserService.GetUserInfo(CurrentUser);
+                Groups = await UserService.GetGroups(CurrentUser);
+            }
+        }
     }
+
 }

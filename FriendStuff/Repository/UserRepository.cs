@@ -23,11 +23,11 @@ public class UserRepository(FriendStuffDbContext context) : IUserRepository
 
     public async Task<User?> FindUserByUsernameOrEmail(string Username, string Email)
     {
-        return await this._context.Set<User>().FirstOrDefaultAsync(u => u.Username.Equals(Username) || u.Email.Equals(Email));
+        return await this._context.Set<User>().Include(u => u.MemberGroups).Include(u => u.GroupsAdmin).FirstOrDefaultAsync(u => u.Username.Equals(Username) || u.Email.Equals(Email));
     }
 
     public async Task<User?> FindUserByUsername(string Username)
     {
-        return await this._context.Set<User>().FirstOrDefaultAsync(u => u.Username.Equals(Username));
+        return await this._context.Set<User>().Include(u => u.MemberGroups).Include(u => u.GroupsAdmin).FirstOrDefaultAsync(u => u.Username.Equals(Username));
     }
 }
