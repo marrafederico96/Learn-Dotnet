@@ -8,8 +8,8 @@ public class FriendStuffDbContext(DbContextOptions<FriendStuffDbContext> options
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Group> Groups { get; set; }
-
     public DbSet<GroupMember> GroupMembers { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
@@ -19,6 +19,7 @@ public class FriendStuffDbContext(DbContextOptions<FriendStuffDbContext> options
             .HasIndex(u => u.Email)
             .IsUnique();
 
-        modelBuilder.Entity<Group>().HasIndex(g => new { g.GroupName, g.AdminId }).IsUnique();
+        modelBuilder.Entity<Group>().HasIndex(g => g.GroupName).IsUnique();
+        modelBuilder.Entity<GroupMember>().HasIndex(gm => new { gm.GroupId, gm.UserId }).IsUnique();
     }
 }

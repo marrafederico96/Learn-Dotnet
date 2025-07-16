@@ -41,7 +41,7 @@ namespace FriendStuff.Migrations
 
                     b.HasIndex("AdminId");
 
-                    b.HasIndex("GroupName", "AdminId")
+                    b.HasIndex("GroupName")
                         .IsUnique();
 
                     b.ToTable("Groups");
@@ -69,9 +69,10 @@ namespace FriendStuff.Migrations
 
                     b.HasKey("GroupMemberId");
 
-                    b.HasIndex("GroupId");
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("GroupId", "UserId")
+                        .IsUnique();
 
                     b.ToTable("GroupMembers");
                 });

@@ -7,7 +7,7 @@ namespace FriendStuff.Repository;
 
 public class UserRepository(FriendStuffDbContext context) : IUserRepository
 {
-    private readonly DbContext _context = context;
+    private readonly FriendStuffDbContext _context = context;
 
     public async Task RegisterUser(User user)
     {
@@ -17,7 +17,7 @@ public class UserRepository(FriendStuffDbContext context) : IUserRepository
 
     public async Task DeleteUser(User user)
     {
-        context.Remove(user);
+        this._context.Remove(user);
         await this._context.SaveChangesAsync();
     }
 

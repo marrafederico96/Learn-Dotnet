@@ -3,6 +3,13 @@
      margin: 20px 0;
  }
 
+ ::deep form {
+     display: flex;
+     flex-direction: row;
+     justify-content: start;
+     align-items: center;
+ }
+
  ::deep form input {
      padding: 6px;
      background-color: rgb(250, 226, 217);
@@ -20,7 +27,7 @@
      font-weight: bold;
      background-color: #4e0d0d;
      margin: 5px 0 10px 0;
-     text-align: center;
+     text-align: left;
  }
 
  .group-container {

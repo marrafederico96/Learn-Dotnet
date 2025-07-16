@@ -78,9 +78,10 @@ namespace FriendStuff.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupMembers_GroupId",
+                name: "IX_GroupMembers_GroupId_UserId",
                 table: "GroupMembers",
-                column: "GroupId");
+                columns: new[] { "GroupId", "UserId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_GroupMembers_UserId",
@@ -93,9 +94,9 @@ namespace FriendStuff.Migrations
                 column: "AdminId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_GroupName_AdminId",
+                name: "IX_Groups_GroupName",
                 table: "Groups",
-                columns: new[] { "GroupName", "AdminId" },
+                column: "GroupName",
                 unique: true);
 
             migrationBuilder.CreateIndex(

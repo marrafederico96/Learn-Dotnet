@@ -26,4 +26,12 @@ public interface IGroupService
     /// <returns></returns>
     public Task AddMember(string username);
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="groupName"></param>
+    /// <returns></returns>
+    public Task<GroupMemberDto> FindGroup(string groupName);
+
 }

@@ -1,0 +1,52 @@
+﻿@using FriendStuff.Components.Shared
+@using FriendStuff.Dto
+@using FriendStuff.Services
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+
+@attribute [Authorize]
+
+@inject IGroupService GroupService
+
+<h2>Group Page</h2>
+
+@if (groupMemberDto != null)
+{
+    <div>
+        <p>@groupMemberDto.GroupName</p>
+        @foreach (var member in groupMemberDto.MemberUsername)
+        {
+            <p>@member</p>
+        }
+    </div>
+}
+else
+{
+    <div>Loading...</div>
+}
+
+
+@code {
+    [Parameter]
+    public string? Group { get; set; }
+    [CascadingParameter(Name = "Groups")]
+    public List<GroupMemberDto>? Groups { get; set; }
+    private GroupMemberDto? groupMemberDto;
+    private string? error;
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            if (Groups != null)
+            {
+                groupMemberDto = Groups.Where(g => g.GroupName.Equals(Group)).FirstOrDefault();
+            }
+        }
+        catch (ArgumentException e)
+        {
+            this.error = e.Message;
+        }
+    }
+
+}

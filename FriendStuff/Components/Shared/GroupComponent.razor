@@ -15,9 +15,9 @@
     <div>
         <h2>Manage Your Groups and Events</h2>
     </div>
-    @if (Groups != null)
+    <h3 style="margin: 20px 0;">My Groups</h3>
+    @if (Groups != null && Groups.Count > 0)
     {
-        <h3 style="margin: 20px 0;">My Groups</h3>
         <div class="group-container">
             @foreach (var group in Groups)
             {
@@ -32,17 +32,17 @@
     }
     else
     {
-        <div>Nessun gruppo trovato</div>
+        <div style="margin: 20px 0;">Nessun gruppo trovato</div>
     }
     <EditForm Model="GroupData" OnValidSubmit="CreateGroup" FormName="GroupForm">
         <DataAnnotationsValidator />
         <InputText placeholder="Group Name" required @bind-Value="GroupData.GroupName" />
-        @if (!string.IsNullOrEmpty(error))
-        {
-            <p class="error">@error</p>
-        }
-        <button type="submit">Create</button>
+        <button type=" submit">Create</button>
     </EditForm>
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <p style="color: red; margin:10px 0;">@error</p>
+    }
 </section>
 @code {
     [Parameter]

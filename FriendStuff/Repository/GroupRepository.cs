@@ -7,7 +7,7 @@ namespace FriendStuff.Repository;
 
 public class GroupRepository(FriendStuffDbContext context) : IGroupRepositoy
 {
-    private FriendStuffDbContext _context = context;
+    private readonly FriendStuffDbContext _context = context;
     public async Task CreateGroup(Group group)
     {
         await this._context.AddAsync(group);
@@ -21,9 +21,9 @@ public class GroupRepository(FriendStuffDbContext context) : IGroupRepositoy
 
     }
 
-    public async Task<Group?> FindGroupAdmin(string groupName, string adminUsername)
+    public async Task<Group?> FindGroup(string groupName)
     {
-        return await this._context.Set<Group>().Include(g => g.GroupMembers).FirstOrDefaultAsync(g => g.GroupName.Equals(groupName) && g.Admin.Username.Equals(adminUsername));
+        return await this._context.Set<Group>().Include(g => g.GroupMembers).ThenInclude(m => m.User).FirstOrDefaultAsync(g => g.GroupName.Equals(groupName));
     }
 
     public async Task AddMember(GroupMember user)
@@ -32,8 +32,4 @@ public class GroupRepository(FriendStuffDbContext context) : IGroupRepositoy
         await this._context.SaveChangesAsync();
     }
 
-    public Task<Group?> FindGroup(string groupName, string adminUsername)
-    {
-        throw new NotImplementedException();
-    }
 }

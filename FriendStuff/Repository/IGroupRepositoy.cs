@@ -27,7 +27,7 @@ public interface IGroupRepositoy
     /// <param name="groupName"></param>
     /// <param name="adminUsername"></param>
     /// <returns></returns>
-    public Task<Group?> FindGroup(string groupName, string adminUsername);
+    public Task<Group?> FindGroup(string groupName);
 
     /// <summary>
     /// 
