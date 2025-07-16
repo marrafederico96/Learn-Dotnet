@@ -28,7 +28,5 @@
 
 ## 🛠️ Tecnologie Utilizzate
 
-- **Frontend**: Blazor
-- **Backend**: Blazor
-
+- Blazor per tutto lo stack
 ---
