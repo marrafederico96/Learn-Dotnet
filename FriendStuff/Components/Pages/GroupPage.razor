@@ -1,4 +1,4 @@
-﻿@page "/Account/Group/{Group}"
+﻿@page "/Account/Group/{GroupName}"
 
 @using FriendStuff.Components.Shared
 @using FriendStuff.Dto
@@ -11,9 +11,9 @@
 
 @inject IGroupService GroupService
 
-<GroupPageComponent Group="@Group" />
+<GroupPageComponent GroupName="@GroupName" />
 
 @code {
     [Parameter]
-    public string? Group { get; set; }
+    public string? GroupName { get; set; }
 }

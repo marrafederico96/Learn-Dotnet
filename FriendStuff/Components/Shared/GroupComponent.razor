@@ -21,8 +21,7 @@
         <div class="group-container">
             @foreach (var group in Groups)
             {
-                string urlGroupName = group.GroupName.Replace(" ", "-");
-                string urlGroup = "/Account/Group/" + urlGroupName;
+                string urlGroup = "/Account/Group/" + group.NormalizeGroupName;
                 <NavLink href="@urlGroup" class="group">
                     <p>@group.GroupName</p>
                     <p>@group.NumberMember Members</p>

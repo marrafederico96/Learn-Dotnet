@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FriendStuff.Migrations
 {
     [DbContext(typeof(FriendStuffDbContext))]
-    [Migration("20250716125529_InitialCreate")]
+    [Migration("20250716181512_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,6 +37,10 @@ namespace FriendStuff.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NormalizedGroupName")
                         .IsRequired()
                         .HasColumnType("text");
 

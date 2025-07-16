@@ -1,14 +1,14 @@
-
 using FriendStuff.Dto;
 using FriendStuff.Models;
 using FriendStuff.Repository;
 
 namespace FriendStuff.Services;
 
-public class GroupService(IGroupRepositoy groupRepositoy, IUserRepository userRepository) : IGroupService
+public class GroupService(IGroupRepositoy groupRepositoy, IUserRepository userRepository, SlugString slugString) : IGroupService
 {
-    private IGroupRepositoy _groupRepository = groupRepositoy;
-    private IUserRepository _userRepository = userRepository;
+    private readonly IGroupRepositoy _groupRepository = groupRepositoy;
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly SlugString _slugString = slugString;
     public async Task CreateGroup(string GroupName, string AdminUsername)
     {
         var result = await this._groupRepository.FindGroup(GroupName.TrimEnd().TrimStart());
@@ -25,6 +25,7 @@ public class GroupService(IGroupRepositoy groupRepositoy, IUserRepository userRe
         Group newGroup = new()
         {
             GroupName = GroupName.TrimEnd().TrimStart(),
+            NormalizedGroupName = this._slugString.GenerateSlug(GroupName),
             Admin = admin,
         };
 
@@ -57,6 +58,7 @@ public class GroupService(IGroupRepositoy groupRepositoy, IUserRepository userRe
         GroupMemberDto groupMemberDto = new()
         {
             GroupName = group.GroupName,
+            NormalizeGroupName = group.NormalizedGroupName,
             MemberUsername = [.. group.GroupMembers.Select(u => u.User.Username)],
             NumberMember = group.GroupMembers.Count
         };

@@ -88,6 +88,7 @@ public class UserService(IUserRepository userRepository, IPasswordHasher<User> p
             Groups = [.. user.MemberGroups.Select(g => new GroupMemberDto
             {
                 GroupName = g.Group.GroupName,
+                NormalizeGroupName = g.Group.NormalizedGroupName,
                 MemberUsername = [.. g.Group.GroupMembers.Select(u => u.User.Username)],
                 NumberMember = g.Group.GroupMembers.Count()
 
@@ -104,6 +105,7 @@ public class UserService(IUserRepository userRepository, IPasswordHasher<User> p
         {
             GroupName = g.Group.GroupName,
             NumberMember = g.Group.GroupMembers.Count,
+            NormalizeGroupName = g.Group.NormalizedGroupName,
             MemberUsername = [.. g.Group.GroupMembers.Select(u => u.User.Username)]
         }).ToList();
 

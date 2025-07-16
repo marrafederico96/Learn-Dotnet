@@ -29,18 +29,21 @@ else
 
 @code {
     [Parameter]
-    public string? Group { get; set; }
+    public string? GroupName { get; set; }
+
     [CascadingParameter(Name = "Groups")]
     public List<GroupMemberDto>? Groups { get; set; }
+
     private GroupMemberDto? groupMemberDto;
     private string? error;
     protected override void OnParametersSet()
     {
         try
         {
-            if (Groups != null)
+            if (Groups != null && GroupName != null)
             {
-                groupMemberDto = Groups.Where(g => g.GroupName.Equals(Group)).FirstOrDefault();
+                groupMemberDto = Groups.FirstOrDefault(g => g.NormalizeGroupName.Equals(GroupName));
+
             }
         }
         catch (ArgumentException e)

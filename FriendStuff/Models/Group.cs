@@ -12,6 +12,9 @@ public class Group
     public string GroupName { get; set; } = string.Empty;
 
     [Required]
+    public string NormalizedGroupName { get; set; } = string.Empty;
+
+    [Required]
     public long AdminId { get; set; }
 
     [ForeignKey(nameof(AdminId))]

@@ -36,6 +36,7 @@ namespace FriendStuff.Migrations
                     GroupId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     GroupName = table.Column<string>(type: "text", nullable: false),
+                    NormalizedGroupName = table.Column<string>(type: "text", nullable: false),
                     AdminId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>

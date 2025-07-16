@@ -37,6 +37,10 @@ namespace FriendStuff.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("NormalizedGroupName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("GroupId");
 
                     b.HasIndex("AdminId");
