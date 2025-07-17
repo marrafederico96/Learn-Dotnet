@@ -1,7 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Authorization;
-@using Microsoft.AspNetCore.Components.Authorization;
-@using System.Security.Claims;
-@using FriendStuff.Models;
 @using FriendStuff.Dto;
 @using FriendStuff.Services;
 
@@ -12,16 +9,15 @@
 @attribute [Authorize]
 
 <section>
-    <div>
-        <h2>Manage Your Groups and Events</h2>
-    </div>
-    <h3 style="margin: 20px 0;">My Groups</h3>
-    @if (Groups != null && Groups.Count > 0)
+    <h2>Manage Your Groups and Events</h2>
+    <hr>
+    <h3 style="margin-top: 20px;">My Groups</h3>
+    @if (UserGroups is { Count: > 0 })
     {
         <div class="group-container">
-            @foreach (var group in Groups)
+            @foreach (var group in UserGroups)
             {
-                string urlGroup = "/Account/Group/" + group.NormalizeGroupName;
+                var urlGroup = "/account/group/" + group.NormalizeGroupName;
                 <NavLink href="@urlGroup" class="group">
                     <p>@group.GroupName</p>
                     <p>@group.NumberMember Members</p>
@@ -31,24 +27,24 @@
     }
     else
     {
-        <div style="margin: 20px 0;">Nessun gruppo trovato</div>
+        <div style="margin: 20px 0;">No group found</div>
     }
     <EditForm Model="GroupData" OnValidSubmit="CreateGroup" FormName="GroupForm">
         <DataAnnotationsValidator />
         <InputText placeholder="Group Name" required @bind-Value="GroupData.GroupName" />
-        <button type=" submit">Create</button>
+        <button type="submit">Create</button>
     </EditForm>
-    @if (!string.IsNullOrEmpty(error))
+    @if (!string.IsNullOrEmpty(_error))
     {
-        <p style="color: red; margin:10px 0;">@error</p>
+        <p style="color: red; margin:10px 0;">@_error</p>
     }
 </section>
 @code {
     [Parameter]
     public UserInfoDto? UserInfo { get; set; }
     [Parameter]
-    public List<GroupMemberDto>? Groups { get; set; }
-    private string? error = null;
+    public List<GroupMemberDto>? UserGroups { get; set; }
+    private string? _error;
     private GroupDto GroupData { get; set; } = new GroupDto();
     public async Task CreateGroup()
     {
@@ -60,13 +56,14 @@
                 {
                     await GroupService.CreateGroup(GroupData.GroupName, UserInfo.Username);
                     GroupData = new GroupDto();
-                    Groups = await UserService.GetGroups(UserInfo.Username);
+                    UserGroups = await UserService.GetGroups(UserInfo.Username);
+
                 }
             }
         }
         catch (ArgumentException e)
         {
-            error = e.Message;
+            _error = e.Message;
         }
     }
 }

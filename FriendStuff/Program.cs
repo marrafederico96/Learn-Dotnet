@@ -18,13 +18,16 @@ builder.Services.AddDbContext<FriendStuffDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    options.LoginPath = "/account/login";
+});
 
-builder.Services.AddScoped<SlugString>();
+builder.Services.AddScoped<NormalizeUrlString>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IGroupRepositoy, GroupRepository>();
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddSingleton<ILoginProcessingService, LoginProcessingService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

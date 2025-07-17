@@ -17,7 +17,7 @@ public class UserService(IUserRepository userRepository, IPasswordHasher<User> p
 
     public async Task RegisterUser(UserRegisterDto userData)
     {
-        User? user = await this._userRepository.FindUserByUsernameOrEmail(userData.Username.ToLower().Trim(), userData.Email.Trim().ToLower());
+        var user = await this._userRepository.FindUserByUsernameOrEmail(userData.Username.ToLower().Trim(), userData.Email.Trim().ToLower());
 
         if (user != null)
         {
@@ -42,7 +42,7 @@ public class UserService(IUserRepository userRepository, IPasswordHasher<User> p
 
     public async Task LoginUser(UserLoginDto userData)
     {
-        User? user = await this._userRepository.FindUserByUsername(userData.Username.Trim().ToLower()) ?? throw new ArgumentException("Wrong credentials");
+        var user = await this._userRepository.FindUserByUsername(userData.Username.Trim().ToLower()) ?? throw new ArgumentException("Wrong credentials");
 
         if (this._passwordHasher.VerifyHashedPassword(user, user.PasswordHash, userData.Password) == 0)
         {
@@ -56,16 +56,11 @@ public class UserService(IUserRepository userRepository, IPasswordHasher<User> p
             new(ClaimTypes.Role, "User"),
         };
 
-        var claimsIdenty = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         if (this._httpContext.HttpContext != null)
         {
-            await this._httpContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdenty));
+            await this._httpContext.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
         }
-    }
-
-    public Task DeleteUser()
-    {
-        throw new NotImplementedException();
     }
 
     public async Task Logout()
@@ -76,9 +71,9 @@ public class UserService(IUserRepository userRepository, IPasswordHasher<User> p
         }
     }
 
-    public async Task<UserInfoDto> GetUserInfo(string Username)
+    public async Task<UserInfoDto> GetUserInfo(string username)
     {
-        var user = await this._userRepository.FindUserByUsername(Username) ?? throw new ArgumentException("User not found");
+        var user = await this._userRepository.FindUserByUsername(username) ?? throw new ArgumentException("User not found");
         UserInfoDto userInfo = new()
         {
             Username = user.Username,
@@ -90,16 +85,16 @@ public class UserService(IUserRepository userRepository, IPasswordHasher<User> p
                 GroupName = g.Group.GroupName,
                 NormalizeGroupName = g.Group.NormalizedGroupName,
                 MemberUsername = [.. g.Group.GroupMembers.Select(u => u.User.Username)],
-                NumberMember = g.Group.GroupMembers.Count()
+                NumberMember = g.Group.GroupMembers.Count
 
             })]
         };
         return userInfo;
     }
 
-    public async Task<List<GroupMemberDto>> GetGroups(string Username)
+    public async Task<List<GroupMemberDto>> GetGroups(string username)
     {
-        var user = await this._userRepository.FindUserByUsername(Username) ?? throw new ArgumentException("User not found");
+        var user = await this._userRepository.FindUserByUsername(username) ?? throw new ArgumentException("User not found");
 
         var groupMemberDto = user.MemberGroups.Select(g => new GroupMemberDto
         {
@@ -110,6 +105,16 @@ public class UserService(IUserRepository userRepository, IPasswordHasher<User> p
         }).ToList();
 
         return groupMemberDto;
+    }
+
+    public async Task DeleteUser(string username)
+    {
+        var user = await this._userRepository.FindUserByUsername(username) ?? throw new ArgumentException("User not found");
+        if (user.MemberGroups.Select(u => u.GroupMemberRole == 0).FirstOrDefault())
+        {
+            throw new ArgumentException("User cannot be delete. Is admin");
+        }
+        await this._userRepository.DeleteUser(user);
     }
 }
 

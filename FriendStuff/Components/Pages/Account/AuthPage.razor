@@ -1,14 +1,8 @@
-﻿@page "/Account/{Mode}"
+﻿@page "/account/{Mode}"
 
 @rendermode InteractiveServer
 
 @using FriendStuff.Components.Shared
-@using FriendStuff.Dto;
-@using FriendStuff.Services;
-@inject IUserService UserService;
-@inject NavigationManager Navigation;
-@inject NavigationManager Navigation;
-@inject ILoginProcessingService LoginProcessingService
 
 <AuthComponent Mode="@Mode" />
 

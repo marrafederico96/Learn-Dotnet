@@ -10,6 +10,14 @@ header {
     background-color: var(--bg-color);
 }
 
+header h1:active {
+    transform: scale(0.95);
+}
+
+header h1>::deep a {
+    border: none;
+}
+
 @media screen and (max-width: 600px) {
     header {
         height: auto;

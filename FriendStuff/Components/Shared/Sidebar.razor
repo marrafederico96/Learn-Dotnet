@@ -15,7 +15,7 @@
                 <p>@UserInfo.Email</p>
             </div>
         </div>
-        <NavLink href="/Account/Logout">Logout</NavLink>
+        <NavLink href="/account/logout">Logout</NavLink>
     }
 </div>
 
@@ -24,7 +24,7 @@
     public bool IsOpen { get; set; }
 
     [Parameter]
-    public required UserInfoDto UserInfo { get; set; }
+    public UserInfoDto? UserInfo { get; set; }
 
     private string SidebarCssClass => IsOpen ? "sidebar open" : "sidebar";
 

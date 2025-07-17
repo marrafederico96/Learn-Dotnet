@@ -4,18 +4,17 @@
 @using FriendStuff.Services;
 @inject IUserService UserService;
 @inject NavigationManager Navigation;
-@inject NavigationManager Navigation;
 @inject ILoginProcessingService LoginProcessingService
 
 <div class="form-container">
-    @if (isRegisterPage)
+    @if (IsRegisterPage)
     {
         <h2>Register</h2>
         <EditForm Model="UserDataRegister" OnValidSubmit="Submit">
             <DataAnnotationsValidator />
             <div>
                 <label for="FirstName">First Name</label>
-                <InputText id="FirstName" required placeholder="First Name" @bind-Value="UserDataRegister!.FirstName" />
+                <InputText id="FirstName" required placeholder="First Name" @bind-Value="UserDataRegister.FirstName" />
             </div>
             <div>
                 <label for="LastName">Last Name</label>
@@ -44,12 +43,12 @@
                     @bind-Value="UserDataRegister.ConfirmPassword" />
 
             </div>
-            @if (errorMessage != "")
+            @if (_errorMessage != "")
             {
-                <p class="error">@errorMessage</p>
+                <p class="error">@_errorMessage</p>
             }
-            <button type="submit" disabled="@(!editContext?.Validate())">Register</button>
-            <p>Alredy register? <NavLink href="/Account/Login">Login</NavLink>
+            <button type="submit" disabled="@(!_editContext?.Validate())">Register</button>
+            <p>Already register? <NavLink href="/account/login">Login</NavLink>
             </p>
         </EditForm>
     }
@@ -60,7 +59,7 @@
             <DataAnnotationsValidator />
             <div>
                 <label for="Username">Username</label>
-                <InputText id="Username" required placeholder="Username" @bind-Value="UserDataLogin!.Username" />
+                <InputText id="Username" required placeholder="Username" @bind-Value="UserDataLogin.Username" />
             </div>
             <div>
                 <label for="Password">Password</label>
@@ -68,67 +67,60 @@
                     @bind-Value="UserDataLogin.Password" />
 
             </div>
-            @if (errorMessage != "")
+            @if (_errorMessage != "")
             {
-                <p class="error">@errorMessage</p>
+                <p class="error">@_errorMessage</p>
             }
-            <button type="submit" disabled="@(!editContext?.Validate())">Login</button>
-            <p>New user? <NavLink href="/Account/Register">Register</NavLink>
+            <button type="submit" disabled="@(!_editContext?.Validate())">Login</button>
+            <p>New user? <NavLink href="/account/register">Register</NavLink>
             </p>
         </EditForm>
     }
 </div>
 
 @code {
-    private EditContext? editContext;
-    private string errorMessage = string.Empty;
+    private EditContext? _editContext;
+    private string _errorMessage = string.Empty;
     [Parameter]
     public string? Mode { get; set; }
     [SupplyParameterFromQuery(Name = "error")]
     public string? ErrorUrl { get; set; }
-    private bool isRegisterPage => Mode?.Equals("Register", StringComparison.OrdinalIgnoreCase) ?? false;
+    private bool IsRegisterPage => Mode?.Equals("Register", StringComparison.OrdinalIgnoreCase) ?? false;
     private UserRegisterDto UserDataRegister { get; set; } = new UserRegisterDto();
     private UserLoginDto UserDataLogin { get; set; } = new UserLoginDto();
 
     protected override void OnParametersSet()
     {
-        errorMessage = string.Empty;
-        if (isRegisterPage)
-        {
-            editContext = new EditContext(UserDataRegister);
-        }
-        else
-        {
-            editContext = new EditContext(UserDataLogin);
-        }
+        _errorMessage = string.Empty;
+        _editContext = IsRegisterPage ? new EditContext(UserDataRegister) : new EditContext(UserDataLogin);
 
         if (!string.IsNullOrEmpty(ErrorUrl))
         {
-            errorMessage = ErrorUrl;
+            _errorMessage = ErrorUrl;
         }
     }
 
     public async Task Submit()
     {
-        if (isRegisterPage)
+        if (IsRegisterPage)
         {
             try
             {
                 await UserService.RegisterUser(UserDataRegister);
                 UserDataRegister = new UserRegisterDto();
-                Navigation.NavigateTo("/Account/Login", forceLoad: true);
+                Navigation.NavigateTo("/account/login", forceLoad: true);
                 StateHasChanged();
             }
             catch (ArgumentException e)
             {
-                this.errorMessage = e.Message;
+                this._errorMessage = e.Message;
             }
         }
         else
         {
             LoginProcessingService.UserData = UserDataLogin;
             UserDataLogin = new UserLoginDto();
-            Navigation.NavigateTo("/Account/Login/Processing", forceLoad: true);
+            Navigation.NavigateTo("/account/login/processing", forceLoad: true);
             StateHasChanged();
         }
     }

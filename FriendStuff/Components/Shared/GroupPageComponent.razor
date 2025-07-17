@@ -5,20 +5,36 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
 
+@rendermode InteractiveServer
+
 @attribute [Authorize]
 
 @inject IGroupService GroupService
-
-<h2>Group Page</h2>
+@inject IUserService UserService
 
 @if (groupMemberDto != null)
 {
+    <h2>@groupMemberDto.GroupName</h2>
+    <EditForm Model="username" FormName="SearchForm" OnValidSubmit="SearchUser">
+        <InputText type="search" placeholder="Search username" @bind-Value="@username" />
+        <button type="submit">Search</button>
+    </EditForm>
+    @if (user != null)
+    {
+        <div style="margin: 30px 0;">
+            <span>@user.Username</span>
+            <button type="submit" @onclick="AddMember">Add Member</button>
+        </div>
+    }
     <div>
-        <p>@groupMemberDto.GroupName</p>
-        @foreach (var member in groupMemberDto.MemberUsername)
-        {
-            <p>@member</p>
-        }
+        <p>Members:
+            @foreach (var member in groupMemberDto.MemberUsername)
+            {
+                <span>@member</span>
+            }
+        </p>
+
+
     </div>
 }
 else
@@ -26,29 +42,65 @@ else
     <div>Loading...</div>
 }
 
-
 @code {
     [Parameter]
     public string? GroupName { get; set; }
+    [Parameter]
+    public UserInfoDto? UserInfo { get; set; }
 
-    [CascadingParameter(Name = "Groups")]
-    public List<GroupMemberDto>? Groups { get; set; }
+    [Parameter]
+    public List<GroupMemberDto>? UserGroups { get; set; }
 
     private GroupMemberDto? groupMemberDto;
+
+    private string username = string.Empty;
+    private UserInfoDto? user;
     private string? error;
     protected override void OnParametersSet()
     {
         try
         {
-            if (Groups != null && GroupName != null)
+            if (UserGroups != null && GroupName != null)
             {
-                groupMemberDto = Groups.FirstOrDefault(g => g.NormalizeGroupName.Equals(GroupName));
+                groupMemberDto = UserGroups.FirstOrDefault(g => g.NormalizeGroupName.Equals(GroupName));
 
             }
         }
         catch (ArgumentException e)
         {
             this.error = e.Message;
+        }
+    }
+
+    public async Task SearchUser()
+    {
+        try
+        {
+            user = await UserService.GetUserInfo(this.username.Trim().ToLower());
+        }
+        catch (ArgumentException e)
+        {
+            error = e.Message;
+        }
+    }
+
+    public async Task AddMember()
+    {
+        try
+        {
+            if (GroupName != null)
+            {
+                await GroupService.AddMember(this.username.ToLower().Trim(), GroupName);
+                if (UserInfo != null)
+                {
+                    UserGroups = await UserService.GetGroups(UserInfo.Username);
+                }
+                this.username = string.Empty;
+            }
+        }
+        catch (ArgumentException e)
+        {
+            error = e.Message;
         }
     }
 

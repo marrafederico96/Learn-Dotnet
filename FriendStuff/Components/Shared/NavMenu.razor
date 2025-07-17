@@ -1,33 +1,31 @@
-﻿@using FriendStuff.Components.Shared
-@using Microsoft.AspNetCore.Components.Authorization
-@using FriendStuff.Dto;
+﻿@using FriendStuff.Dto;
 
 @inherits LayoutComponentBase
 @rendermode InteractiveServer
 
 <nav>
-    @if (CurrentUser != null)
+    @if (!string.IsNullOrEmpty(CurrentUser))
     {
         <button type="button" @onclick:preventDefault @onclick="SidebarState">@CurrentUser</button>
-        <Sidebar IsOpen="@isSidebarOpen" UserInfo="@UserInfo" />
+        <Sidebar IsOpen="@_isSidebarOpen" UserInfo="@UserInfo" />
     }
     else
     {
-        <NavLink href="/Account/Register">Register</NavLink>
-        <NavLink href="/Account/Login">Login</NavLink>
+        <NavLink href="/account/register">Register</NavLink>
+        <NavLink href="/account/login">Login</NavLink>
     }
 </nav>
 
 @code {
-    private bool isSidebarOpen;
+    private bool _isSidebarOpen;
     [Parameter]
-    public required string CurrentUser { get; set; }
+    public string? CurrentUser { get; set; }
     [Parameter]
     public UserInfoDto? UserInfo { get; set; }
 
-    public void SidebarState()
+    private void SidebarState()
     {
-        this.isSidebarOpen = !this.isSidebarOpen;
+        this._isSidebarOpen = !this._isSidebarOpen;
     }
 
 }

@@ -5,22 +5,21 @@ namespace FriendStuff.Models;
 public class User
 {
     [Key]
-    public long UserId { get; set; }
+    public long UserId { get; init; }
 
-    [Required]
-    public string Username { get; set; } = string.Empty;
+    [Required][MaxLength(100)]
+    public required string Username { get; init; }
 
-    [Required]
-    public string FirstName { get; set; } = string.Empty;
+    [Required][MaxLength(100)]
+    public required string FirstName { get; init; }
 
-    [Required]
-    public string LastName { get; set; } = string.Empty;
+    [Required][MaxLength(100)]
+    public required string LastName { get; init; }
 
-    [Required]
-    public string Email { get; set; } = string.Empty;
+    [Required][MaxLength(100)]
+    public required string Email { get; init; }
 
-    [Required]
-    public string PasswordHash { get; set; } = string.Empty;
+    [Required] [MaxLength(255)] public string PasswordHash { get; set; } = string.Empty;
 
     public ICollection<Group>? GroupsAdmin { get; } = [];
 

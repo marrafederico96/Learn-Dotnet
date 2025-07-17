@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,25 +6,25 @@ namespace FriendStuff.Models;
 public class GroupMember
 {
     [Key]
-    public long GroupMemberId { get; set; }
+    public long GroupMemberId { get; init; }
 
     [Required]
-    public long GroupId { get; set; }
+    public long GroupId { get; init; }
 
     [Required]
-    public long UserId { get; set; }
+    public long UserId { get; init; }
 
     [Required]
     [EnumDataType(typeof(GroupMemberRole))]
-    public GroupMemberRole GroupMemberRole { get; set; }
+    public GroupMemberRole GroupMemberRole { get; init; }
 
     [Required]
-    public DateTime JoinData { get; set; }
+    public DateTime JoinData { get; init; }
 
     [ForeignKey(nameof(GroupId))]
-    public Group Group { get; set; } = null!;
+    public required Group Group { get; init; }
 
     [ForeignKey(nameof(UserId))]
-    public User User { get; set; } = null!;
+    public required User User { get; init; }
 
 }

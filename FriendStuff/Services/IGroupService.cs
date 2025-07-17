@@ -4,34 +4,12 @@ namespace FriendStuff.Services;
 
 public interface IGroupService
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="groupData"></param>
-    /// <returns></returns>
-    public Task CreateGroup(string GroupName, string AdminUsername);
+    public Task CreateGroup(string groupName, string adminUsername);
 
+    public Task DeleteGroup(string groupName);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="groupData"></param>
-    /// <returns></returns>
-    public Task DeleteGroup(GroupDto groupData);
+    public Task AddMember(string username, string groupName);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="username"></param>
-    /// <returns></returns>
-    public Task AddMember(string username);
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="groupName"></param>
-    /// <returns></returns>
     public Task<GroupMemberDto> FindGroup(string groupName);
 
 }

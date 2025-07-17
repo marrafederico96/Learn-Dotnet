@@ -6,19 +6,19 @@ namespace FriendStuff.Models;
 public class Group
 {
     [Key]
-    public long GroupId { get; set; }
+    public long GroupId { get; init; }
+
+    [Required][MaxLength(100)]
+    public required string GroupName { get; init; }
+
+    [Required][MaxLength(100)]
+    public required string NormalizedGroupName { get; init; }
 
     [Required]
-    public string GroupName { get; set; } = string.Empty;
-
-    [Required]
-    public string NormalizedGroupName { get; set; } = string.Empty;
-
-    [Required]
-    public long AdminId { get; set; }
+    public long AdminId { get; init; }
 
     [ForeignKey(nameof(AdminId))]
-    public User Admin { get; set; } = null!;
+    public User? Admin { get; init; }
 
     public ICollection<GroupMember> GroupMembers { get; } = [];
 }

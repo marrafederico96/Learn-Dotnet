@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-
 namespace FriendStuff.Dto;
 
 public class UserRegisterDto

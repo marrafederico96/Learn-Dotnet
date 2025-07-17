@@ -5,8 +5,8 @@ namespace FriendStuff.Models;
 public enum GroupMemberRole
 {
     [Description("ADMIN")]
-    ADMIN,
+    Admin,
 
     [Description("MEMBER")]
-    MEMBER
+    Member
 }

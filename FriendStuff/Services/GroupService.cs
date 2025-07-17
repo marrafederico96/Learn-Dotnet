@@ -4,15 +4,17 @@ using FriendStuff.Repository;
 
 namespace FriendStuff.Services;
 
-public class GroupService(IGroupRepositoy groupRepositoy, IUserRepository userRepository, SlugString slugString) : IGroupService
+
+public class GroupService(IGroupRepository groupRepository, IUserRepository userRepository, NormalizeUrlString normalizeUrlString) : IGroupService
 {
-    private readonly IGroupRepositoy _groupRepository = groupRepositoy;
+    private readonly IGroupRepository _groupRepository = groupRepository;
     private readonly IUserRepository _userRepository = userRepository;
-    private readonly SlugString _slugString = slugString;
-    public async Task CreateGroup(string GroupName, string AdminUsername)
+    private readonly NormalizeUrlString _normalizeUrlString = normalizeUrlString;
+
+    public async Task CreateGroup(string groupName, string adminUsername)
     {
-        var result = await this._groupRepository.FindGroup(GroupName.TrimEnd().TrimStart());
-        var admin = await this._userRepository.FindUserByUsername(AdminUsername.Trim().ToLower());
+        var result = await this._groupRepository.FindGroup(NormalizeUrlString.GenerateSlug(groupName));
+        var admin = await this._userRepository.FindUserByUsername(adminUsername.Trim().ToLower());
         if (result != null)
         {
             throw new ArgumentException("Group already exists");
@@ -24,32 +26,36 @@ public class GroupService(IGroupRepositoy groupRepositoy, IUserRepository userRe
 
         Group newGroup = new()
         {
-            GroupName = GroupName.TrimEnd().TrimStart(),
-            NormalizedGroupName = this._slugString.GenerateSlug(GroupName),
+            GroupName = groupName.TrimEnd().TrimStart(),
+            NormalizedGroupName = NormalizeUrlString.GenerateSlug(groupName),
             Admin = admin,
         };
 
         await this._groupRepository.CreateGroup(newGroup);
-        var group = await this._groupRepository.FindGroup(newGroup.GroupName.TrimEnd().TrimStart()) ?? throw new ArgumentException("Error creation group");
-        GroupMember groupMemeber = new()
+
+        GroupMember groupMember = new()
         {
-            Group = group,
-            GroupMemberRole = GroupMemberRole.ADMIN,
+            Group = newGroup,
+            GroupMemberRole = GroupMemberRole.Admin,
             JoinData = DateTime.UtcNow,
-            User = admin,
+            User = admin
         };
 
-        await this._groupRepository.AddMember(groupMemeber);
+        await this._groupRepository.AddMember(groupMember);
     }
 
-    public Task DeleteGroup(GroupDto groupData)
+    public async Task AddMember(string username, string groupName)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task AddMember(string username)
-    {
-        throw new NotImplementedException();
+        var user = await this._userRepository.FindUserByUsername(username) ?? throw new ArgumentException("User not found");
+        var group = await this._groupRepository.FindGroup(groupName) ?? throw new ArgumentException("Group not found");
+        GroupMember groupMember = new()
+        {
+            Group = group,
+            GroupMemberRole = GroupMemberRole.Member,
+            JoinData = DateTime.UtcNow,
+            User = user
+        };
+        await this._groupRepository.AddMember(groupMember);
     }
 
     public async Task<GroupMemberDto> FindGroup(string groupName)
@@ -63,5 +69,12 @@ public class GroupService(IGroupRepositoy groupRepositoy, IUserRepository userRe
             NumberMember = group.GroupMembers.Count
         };
         return groupMemberDto;
+    }
+
+    public async Task DeleteGroup(string groupName)
+    {
+        var group = await this._groupRepository.FindGroup(groupName) ?? throw new ArgumentException("Group not found");
+        await this._groupRepository.DeleteGroup(group);
+
     }
 }

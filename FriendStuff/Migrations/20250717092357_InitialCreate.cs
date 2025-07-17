@@ -18,11 +18,11 @@ namespace FriendStuff.Migrations
                 {
                     UserId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Username = table.Column<string>(type: "text", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: false)
+                    Username = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    PasswordHash = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,8 +35,8 @@ namespace FriendStuff.Migrations
                 {
                     GroupId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    GroupName = table.Column<string>(type: "text", nullable: false),
-                    NormalizedGroupName = table.Column<string>(type: "text", nullable: false),
+                    GroupName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    NormalizedGroupName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     AdminId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -95,9 +95,9 @@ namespace FriendStuff.Migrations
                 column: "AdminId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_GroupName",
+                name: "IX_Groups_NormalizedGroupName",
                 table: "Groups",
-                column: "GroupName",
+                column: "NormalizedGroupName",
                 unique: true);
 
             migrationBuilder.CreateIndex(

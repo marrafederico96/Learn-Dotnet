@@ -1,6 +1,4 @@
-﻿@using FriendStuff.Components.Pages
-@using FriendStuff.Components.Shared
-@using FriendStuff.Models
+﻿@using FriendStuff.Components.Shared
 @using Microsoft.AspNetCore.Components.Authorization
 @using FriendStuff.Services;
 @using FriendStuff.Dto;
@@ -10,13 +8,15 @@
 @inject IUserService UserService;
 
 <header>
-    <h1>Friend Stuff</h1>
-    <NavMenu CurrentUser="@CurrentUser" UserInfo="@UserInfo" />
+    <h1>
+        <NavLink href="/">Friend Stuff</NavLink>
+    </h1>
+    <NavMenu CurrentUser="@_currentUser" UserInfo="@_userInfo" />
 </header>
 
 <main class="container">
-    <CascadingValue Name="UserInfo" Value="UserInfo">
-        <CascadingValue Name="Groups" Value="Groups">
+    <CascadingValue Name="UserInfo" Value="_userInfo">
+        <CascadingValue Name="UserGroups" Value="_userGroups">
             @Body
         </CascadingValue>
     </CascadingValue>
@@ -24,21 +24,21 @@
 
 @code {
     [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
-    private string? CurrentUser;
-    private UserInfoDto? UserInfo;
-    private List<GroupMemberDto>? Groups;
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+    private string? _currentUser;
+    private UserInfoDto? _userInfo;
+    private List<GroupMemberDto>? _userGroups;
 
     protected override async Task OnInitializedAsync()
     {
-        if (authenticationState != null)
+        if (AuthenticationState != null)
         {
-            var authState = await authenticationState;
-            CurrentUser = authState.User.Identity?.Name;
-            if (CurrentUser != null)
+            var authState = await AuthenticationState;
+            _currentUser = authState.User.Identity?.Name;
+            if (_currentUser != null)
             {
-                UserInfo = await UserService.GetUserInfo(CurrentUser);
-                Groups = await UserService.GetGroups(CurrentUser);
+                _userInfo = await UserService.GetUserInfo(_currentUser);
+                _userGroups = await UserService.GetGroups(_currentUser);
             }
         }
     }

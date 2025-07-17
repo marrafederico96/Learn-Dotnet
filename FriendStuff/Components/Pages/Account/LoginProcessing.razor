@@ -1,7 +1,6 @@
-﻿@page "/Account/Login/Processing"
+﻿@page "/account/login/processing"
 
 @using FriendStuff.Services
-@using FriendStuff.Dto;
 
 @inject ILoginProcessingService LoginProcessingService;
 @inject IUserService UserService;
@@ -19,7 +18,7 @@
         }
         catch (ArgumentException e)
         {
-            Navigation.NavigateTo($"/Account/Login?error={Uri.EscapeDataString(e.Message)}");
+            Navigation.NavigateTo($"/account/login?error={Uri.EscapeDataString(e.Message)}");
         }
 
     }

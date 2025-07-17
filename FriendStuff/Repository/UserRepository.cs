@@ -1,4 +1,3 @@
-using System;
 using FriendStuff.Data;
 using FriendStuff.Models;
 using Microsoft.EntityFrameworkCore;
@@ -21,13 +20,13 @@ public class UserRepository(FriendStuffDbContext context) : IUserRepository
         await this._context.SaveChangesAsync();
     }
 
-    public async Task<User?> FindUserByUsernameOrEmail(string Username, string Email)
+    public async Task<User?> FindUserByUsernameOrEmail(string username, string email)
     {
-        return await this._context.Set<User>().Include(u => u.MemberGroups).Include(u => u.GroupsAdmin).FirstOrDefaultAsync(u => u.Username.Equals(Username) || u.Email.Equals(Email));
+        return await this._context.Set<User>().Include(u => u.MemberGroups).Include(u => u.GroupsAdmin).FirstOrDefaultAsync(u => u.Username.Equals(username) || u.Email.Equals(email));
     }
 
-    public async Task<User?> FindUserByUsername(string Username)
+    public async Task<User?> FindUserByUsername(string username)
     {
-        return await this._context.Set<User>().Include(u => u.MemberGroups).Include(u => u.GroupsAdmin).FirstOrDefaultAsync(u => u.Username.Equals(Username));
+        return await this._context.Set<User>().Include(u => u.MemberGroups).Include(u => u.GroupsAdmin).FirstOrDefaultAsync(u => u.Username.Equals(username));
     }
 }

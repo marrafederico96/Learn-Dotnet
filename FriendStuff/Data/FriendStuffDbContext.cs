@@ -1,4 +1,3 @@
-using System;
 using FriendStuff.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +18,7 @@ public class FriendStuffDbContext(DbContextOptions<FriendStuffDbContext> options
             .HasIndex(u => u.Email)
             .IsUnique();
 
-        modelBuilder.Entity<Group>().HasIndex(g => g.GroupName).IsUnique();
+        modelBuilder.Entity<Group>().HasIndex(g => g.NormalizedGroupName).IsUnique();
         modelBuilder.Entity<GroupMember>().HasIndex(gm => new { gm.GroupId, gm.UserId }).IsUnique();
     }
 }

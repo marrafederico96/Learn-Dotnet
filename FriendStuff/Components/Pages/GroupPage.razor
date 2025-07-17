@@ -1,19 +1,20 @@
-﻿@page "/Account/Group/{GroupName}"
+﻿@page "/account/group/{GroupName}"
 
 @using FriendStuff.Components.Shared
 @using FriendStuff.Dto
-@using FriendStuff.Services
 @using Microsoft.AspNetCore.Authorization;
-@using Microsoft.AspNetCore.Components.Authorization
-@using System.Security.Claims
 
 @attribute [Authorize]
 
-@inject IGroupService GroupService
-
-<GroupPageComponent GroupName="@GroupName" />
+<GroupPageComponent GroupName="@GroupName" UserGroups="@UserGroups" UserInfo="@UserInfo" />
 
 @code {
     [Parameter]
     public string? GroupName { get; set; }
+
+    [CascadingParameter(Name = "UserGroups")]
+    public List<GroupMemberDto>? UserGroups { get; set; }
+
+    [CascadingParameter(Name = "UserInfo")]
+    public UserInfoDto? UserInfo { get; set; }
 }
