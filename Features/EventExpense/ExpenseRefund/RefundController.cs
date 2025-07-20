@@ -1,9 +1,10 @@
 using FriendStuff.Features.EventExpense.DTOs;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FriendStuff.Features.EventExpense.ExpenseRefund
 {
+    [Authorize]
     [Route("api/group/event/expense/[controller]/[Action]")]
     [ApiController]
     public class RefundController(IRefundService refundService) : ControllerBase

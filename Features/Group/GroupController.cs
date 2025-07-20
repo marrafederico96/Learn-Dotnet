@@ -1,9 +1,11 @@
 using FriendStuff.Features.Group.DTOs;
 using FriendStuff.Features.Group.Member;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FriendStuff.Features.Group
 {
+    [Authorize]
     [Route("api/[Controller]/[Action]")]
     [ApiController]
     public class GroupController(IGroupService groupService, IGroupMemberService groupMemberService) : ControllerBase

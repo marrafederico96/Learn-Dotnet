@@ -1,8 +1,10 @@
 using FriendStuff.Features.EventExpense.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FriendStuff.Features.EventExpense
 {
+    [Authorize]
     [Route("api/group/event/[controller]/[Action]")]
     [ApiController]
     public class ExpenseController(IExpenseService expenseService) : ControllerBase

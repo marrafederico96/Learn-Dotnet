@@ -1,8 +1,10 @@
 using FriendStuff.Features.GroupEvent.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FriendStuff.Features.GroupEvent
 {
+    [Authorize]
     [Route("api/group/[controller]/[Action]")]
     [ApiController]
     public class EventController(IEventService eventService) : ControllerBase

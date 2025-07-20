@@ -9,13 +9,35 @@ using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using FriendStuff.Features.EventExpense;
 using FriendStuff.Features.EventExpense.ExpenseRefund;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
+var rsa = RSA.Create();
+var publicKey = builder.Configuration["PublicKey"] ?? throw new InvalidOperationException("RSA public key not found");
+rsa.ImportFromPem(publicKey);
+var rsaSecurityKey = new RsaSecurityKey(rsa);
+
 
 builder.Services.AddDbContext<FriendStuffDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = rsaSecurityKey,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(5)
+        };
+    });
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
@@ -35,6 +57,8 @@ builder.Services.AddRouting(options =>
 });
 
 var app = builder.Build();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 if (app.Environment.IsDevelopment())
@@ -47,5 +71,7 @@ app.MapGet("/", context =>
     context.Response.Redirect("/scalar");
     return Task.CompletedTask;
 });
+
+
 
 app.Run();
