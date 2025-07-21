@@ -28,7 +28,10 @@ var rsaSecurityKey = new RsaSecurityKey(rsa);
 
 builder.Services.AddDbContext<FriendStuffDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), npgsqlOptions =>
+    {
+        npgsqlOptions.CommandTimeout(60);
+    });
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
