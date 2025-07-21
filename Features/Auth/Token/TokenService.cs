@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FriendStuff.Features.Auth;
 
-public class TokenService(IConfiguration configuration, FriendStuffDbContext context) : ITokenService
+public class TokenService(FriendStuffDbContext context) : ITokenService
 {
     public async Task<TokenDto> GenerateToken(string username)
     {
@@ -21,8 +21,8 @@ public class TokenService(IConfiguration configuration, FriendStuffDbContext con
         };
         var claimsIdentity = new ClaimsIdentity(claims, "Bearer");
 
-        var rsaPrivateKey = configuration["PrivateKey"] ?? throw new InvalidOperationException("RSA key not found");
-
+        string rsaPrivateKeyPath = Path.Combine(AppContext.BaseDirectory, "certs", "private.pem") ?? throw new InvalidOperationException("RSA key not found");
+        string rsaPrivateKey = await File.ReadAllTextAsync(rsaPrivateKeyPath);
         RSA rsa = RSA.Create();
         rsa.ImportFromPem(rsaPrivateKey);
         var securityKey = new RsaSecurityKey(rsa);

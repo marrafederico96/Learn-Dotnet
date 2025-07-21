@@ -1,0 +1,9 @@
+services:
+  friendstuff:
+    image: friendstuff-app
+    ports:
+      - "5090:5090"
+    env_file:
+      - .env
+    volumes:
+      - ./certs:/app/certs:ro
