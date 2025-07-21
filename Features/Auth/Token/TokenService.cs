@@ -21,7 +21,7 @@ public class TokenService(FriendStuffDbContext context) : ITokenService
         };
         var claimsIdentity = new ClaimsIdentity(claims, "Bearer");
 
-        string rsaPrivateKeyPath = Path.Combine(AppContext.BaseDirectory, "certs", "private.pem") ?? throw new InvalidOperationException("RSA key not found");
+        string rsaPrivateKeyPath = "/etc/secrets/private.pem";
         string rsaPrivateKey = await File.ReadAllTextAsync(rsaPrivateKeyPath);
         RSA rsa = RSA.Create();
         rsa.ImportFromPem(rsaPrivateKey);

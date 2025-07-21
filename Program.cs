@@ -14,10 +14,15 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var rsa = RSA.Create();
-string publicKeyPath = Path.Combine(AppContext.BaseDirectory, "certs", "public.pem") ?? throw new InvalidOperationException("RSA public key not found");
+
+string publicKeyPath = "/etc/secrets/public.pem";
+
 string publicKey = await File.ReadAllTextAsync(publicKeyPath);
+
 rsa.ImportFromPem(publicKey);
+
 var rsaSecurityKey = new RsaSecurityKey(rsa);
 
 
