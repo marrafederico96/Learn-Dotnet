@@ -55,7 +55,6 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IRefundService, RefundService>();
 
-builder.Services.AddOpenApi();
 
 builder.Services.AddRouting(options =>
 {
@@ -66,18 +65,5 @@ var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
-app.MapGet("/", context =>
-{
-    context.Response.Redirect("/scalar");
-    return Task.CompletedTask;
-});
-
-
 
 app.Run();
